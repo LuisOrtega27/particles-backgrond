@@ -1,0 +1,19 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.wrapper{
+    background: linear-gradient(#e285, #28e5); 
+    width: 100vw;
+    height: 100vh;
+    margin: auto;
+    /* outline: solid 2px #28e;
+    outline-offset: -2px; */
+    overflow: hidden;
+}
+
+#canvas{
+    /* background: #fff; */
+}
