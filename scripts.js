@@ -24,6 +24,13 @@ const particlesSettings = {
     mouseCoords: {x: 0, y: 0}
 }
 
+if(wrapper.clientWidth < 1000){
+    particlesSettings.cuantity = 30
+    particlesSettings.PDimentions.h = 2
+    particlesSettings.PDimentions.w = 2
+    particlesSettings.lineWidth = 0.5
+    particlesSettings.lineDistance = 60
+}
 
 
 ctx.fillStyle = particlesSettings.particleColor;
@@ -235,7 +242,9 @@ const animate = ()=>{
         ctx.clearRect(0 , 0, wrapper.clientWidth, wrapper.clientHeight)
         
         detectParticleCloseness()
-        drawLinesToMouse()
+
+        if(wrapper.clientWidth > 1000) drawLinesToMouse()
+        
         drawParticles()
 
 
