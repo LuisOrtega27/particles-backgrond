@@ -89,7 +89,10 @@ const drawLinesToMouse = ()=>{
 
 }
 
+
+
 // MOUSE=============================================================
+
 
 
 const moveCoords = (index)=>{
@@ -120,12 +123,25 @@ const drawParticles = ()=>{
         
     for(let e = 0; e < particlesSettings.cuantity; e++){    
         
-        ctx.fillRect( 
-            particlesSettings.currentCoords[e].x, 
-            particlesSettings.currentCoords[e].y, 
+        ctx.beginPath();
+        ctx.arc(
+            particlesSettings.currentCoords[e].x + particlesSettings.PDimentions.w/2, 
+            particlesSettings.currentCoords[e].y + particlesSettings.PDimentions.w/2, 
             particlesSettings.PDimentions.w, 
-            particlesSettings.PDimentions.h
-        )
+            0, 
+            Math.PI * 2, 
+            true
+        );
+        
+        ctx.stroke();
+        ctx.fill();
+
+        // ctx.fillRect( 
+        //     particlesSettings.currentCoords[e].x, 
+        //     particlesSettings.currentCoords[e].y, 
+        //     particlesSettings.PDimentions.w, 
+        //     particlesSettings.PDimentions.h
+        // )
         
         moveCoords(e)
             
