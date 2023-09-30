@@ -10,14 +10,15 @@ const ctx = canvas.getContext('2d')
 
 const particlesSettings = {
     time: 60,
-    cuantity: 60,
+    cuantity: 30,
     lineDistance: 120,
-    particleColor: "#28e6",
+    particleColor: "#fff",
     lineColor: "#fff",
     lineWidth: 1,
+    mouseLines: false,
     PDimentions: {
-        w: 6,
-        h: 6
+        w: 2,
+        h: 2
     },
     currentCoords: [],
     targetCoords: [],
@@ -38,6 +39,7 @@ ctx.strokeStyle = particlesSettings.lineColor
 ctx.lineWidth = particlesSettings.lineWidth
 
 
+
 // MOUSE=============================================================
 canvas.addEventListener('mousemove', event=>{
 
@@ -52,38 +54,29 @@ const drawLinesToMouse = ()=>{
 
     particlesSettings.currentCoords.forEach( coord => {
         
-        if( 
-            (coord.x- particlesSettings.mouseCoords.x) <= (particlesSettings.lineDistance + 100) 
-            && 
-            (coord.x- particlesSettings.mouseCoords.x) > -(particlesSettings.lineDistance + 100)
-        ){
+        if( (coord.x- particlesSettings.mouseCoords.x) > particlesSettings.lineDistance ) return
             
-            if( 
-                (coord.y - particlesSettings.mouseCoords.y) <= (particlesSettings.lineDistance + 100) 
-                && 
-                (coord.y - particlesSettings.mouseCoords.y) >= -(particlesSettings.lineDistance + 100)
-            ){
+        if( (coord.x- particlesSettings.mouseCoords.x) < -particlesSettings.lineDistance ) return
+            
+        if( (coord.y - particlesSettings.mouseCoords.y) > particlesSettings.lineDistance ) return
+            
+        if( (coord.y - particlesSettings.mouseCoords.y) < -particlesSettings.lineDistance ) return
 
-                ctx.beginPath();
-            
-                ctx.moveTo(
-                    coord.x + particlesSettings.PDimentions.w/2, 
-                    coord.y + particlesSettings.PDimentions.h/2
-                );
-                
-                ctx.lineTo(
-                    particlesSettings.mouseCoords.x,
-                    particlesSettings.mouseCoords.y
-                );
-            
-                ctx.stroke();
-            
-                ctx.closePath();
-                
-            }
-
-        }
-            
+        ctx.beginPath();
+        
+        ctx.moveTo(
+            particlesSettings.mouseCoords.x,
+            particlesSettings.mouseCoords.y
+        );
+    
+        ctx.lineTo(
+            coord.x + particlesSettings.PDimentions.w/2, 
+            coord.y + particlesSettings.PDimentions.h/2
+        );
+    
+        ctx.stroke();
+    
+        ctx.closePath();
 
     })
 
@@ -124,6 +117,7 @@ const drawParticles = ()=>{
     for(let e = 0; e < particlesSettings.cuantity; e++){    
         
         ctx.beginPath();
+        
         ctx.arc(
             particlesSettings.currentCoords[e].x + particlesSettings.PDimentions.w/2, 
             particlesSettings.currentCoords[e].y + particlesSettings.PDimentions.w/2, 
@@ -133,15 +127,9 @@ const drawParticles = ()=>{
             true
         );
         
-        ctx.stroke();
         ctx.fill();
-
-        // ctx.fillRect( 
-        //     particlesSettings.currentCoords[e].x, 
-        //     particlesSettings.currentCoords[e].y, 
-        //     particlesSettings.PDimentions.w, 
-        //     particlesSettings.PDimentions.h
-        // )
+        
+        // ctx.stroke();
         
         moveCoords(e)
             
@@ -160,9 +148,9 @@ const createCoords = (index)=>{
             let randomX = Math.floor(Math.random() * wrapper.clientWidth - 10)
             let randomY = Math.floor(Math.random() * wrapper.clientHeight - 10)
             
-            if(i === 0) particlesSettings.currentCoords[index] = {x: randomX, y: randomY}
+            if( i === 0 ) particlesSettings.currentCoords[index] = { x: randomX, y: randomY } 
             
-            if(i === 1 )particlesSettings.targetCoords[index] = {x: randomX, y: randomY}
+            if( i === 1 ) particlesSettings.targetCoords[index] = { x: randomX, y: randomY }
             
         }
         
@@ -190,10 +178,6 @@ const createCoords = (index)=>{
 
 
 
-
-
-
-
 const drawLines = (pointAX,pointAY, pointBX,pointBY)=>{
 
     ctx.beginPath();
@@ -214,6 +198,45 @@ const drawLines = (pointAX,pointAY, pointBX,pointBY)=>{
 
 }
 
+//  Change color ====================================
+
+changeFirtColorAt = 50
+changeSecondColorAt = 75
+changeThirdColorAt = 90
+
+
+console.log(-5 - -4)
+
+const changeLineColor = (x, y)=>{
+
+    if( 
+        x >= -changeFirtColorAt && 
+        x <= changeFirtColorAt && 
+        y >= -changeFirtColorAt && 
+        y <= changeFirtColorAt
+    
+    ) ctx.strokeStyle = "#28e"
+
+    else if( 
+        x >= -changeSecondColorAt && 
+        x <= changeSecondColorAt && 
+        y >= -changeSecondColorAt && 
+        y <= changeSecondColorAt
+    
+    ) ctx.strokeStyle = "#28e7"
+    
+    else if( 
+        x >= -changeThirdColorAt && 
+        x <= changeThirdColorAt && 
+        y >= -changeThirdColorAt && 
+        y <= changeThirdColorAt
+    
+    ) ctx.strokeStyle = "#28e4"
+    
+    else  ctx.strokeStyle = "#28e2"
+
+}
+
 
 
 const detectParticleCloseness = ()=>{
@@ -221,25 +244,28 @@ const detectParticleCloseness = ()=>{
     for(let i = 0; i < particlesSettings.currentCoords.length; i++){
         
         for(let e = 0; e < particlesSettings.currentCoords.length; e++){
+
+            // X
+            if( (particlesSettings.currentCoords[i].x - particlesSettings.currentCoords[e].x) >= particlesSettings.lineDistance ) continue
+            if( (particlesSettings.currentCoords[i].x - particlesSettings.currentCoords[e].x) <= -particlesSettings.lineDistance ) continue
+
+            // Y
+            if( (particlesSettings.currentCoords[i].y - particlesSettings.currentCoords[e].y) >= particlesSettings.lineDistance ) continue
+            if( (particlesSettings.currentCoords[i].y - particlesSettings.currentCoords[e].y) <= -particlesSettings.lineDistance ) continue
+
+            // changecolor
+            changeLineColor(
+                particlesSettings.currentCoords[i].x - particlesSettings.currentCoords[e].x,
+                particlesSettings.currentCoords[i].y - particlesSettings.currentCoords[e].y
+            );
             
-            if( 
-                (particlesSettings.currentCoords[i].x - particlesSettings.currentCoords[e].x) <= particlesSettings.lineDistance 
-                && 
-                (particlesSettings.currentCoords[i].x - particlesSettings.currentCoords[e].x) > -particlesSettings.lineDistance
-            ){
+            // lines
+            drawLines(
+                particlesSettings.currentCoords[i].x,  particlesSettings.currentCoords[i].y, 
+                particlesSettings.currentCoords[e].x, particlesSettings.currentCoords[e].y
+            );
                 
-                if( 
-                    (particlesSettings.currentCoords[i].y - particlesSettings.currentCoords[e].y) <= particlesSettings.lineDistance 
-                    && 
-                    (particlesSettings.currentCoords[i].y - particlesSettings.currentCoords[e].y) >= -particlesSettings.lineDistance
-                ){
-
-                    drawLines(
-                        particlesSettings.currentCoords[i].x,  particlesSettings.currentCoords[i].y, 
-                        particlesSettings.currentCoords[e].x, particlesSettings.currentCoords[e].y)
-                }
-
-            }
+                
             
         }
 
@@ -259,7 +285,7 @@ const animate = ()=>{
         
         detectParticleCloseness()
 
-        if(wrapper.clientWidth > 1000) drawLinesToMouse()
+        if(wrapper.clientWidth > 1000 && particlesSettings.mouseLines === true ) drawLinesToMouse()
         
         drawParticles()
 

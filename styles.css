@@ -5,13 +5,16 @@
 }
 
 .wrapper{
-    background: linear-gradient(#e285, #28e5); 
     width: 100vw;
     height: 100vh;
     margin: auto;
-    /* outline: solid 2px #28e;
-    outline-offset: -2px; */
     overflow: hidden;
+    /* background: url("./img/particles-2.jpg"); */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background: #000;
+    /* background: linear-gradient(#e285, #28e5);  */
+    /* particles-1 */
 }
 
 #canvas{
